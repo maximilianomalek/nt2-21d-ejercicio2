@@ -13,13 +13,31 @@
 </head>
 
 
-<div class="container-fluid mt-3" id="app">
+<div class="container-fluid mt-3" id="app">    
+    <br>
     <input type="text" class="form-control" v-model="criterioDeBusqueda"
-        placeholder="Ingresar un criterio de busqueda...">
+        placeholder="Ingresar un criterio de busqueda por nombre...">
+    <div class="alert alert-danger" role="alert"  v-if="criterioDeBusqueda.length<3">
+        Ingrese un mínimo de 3 caracteres
+    </div>
+    <div class="alert alert-success" role="alert" v-if="criterioDeBusqueda.length>=3">
+       Mínima cantidad de caracteres correctos.
+    </div>
+    <br>
+
+   
+    <input type="number" class="form-control" v-model="criterioDeBusqueda2"
+        placeholder="Ingresar un criterio de busqueda por dni...">
+    <div class="alert alert-danger" role="alert"  v-if="criterioDeBusqueda2.length<3">
+        Ingrese un mínimo de 3 números
+    </div>
+    <div class="alert alert-success" role="alert"  v-if="criterioDeBusqueda2.length>=3">
+        Mínima cantidad de números correctos.
+    </div>
     <br>
     <div class="card-deck m-0">
         <div class="row">
-            <div class="col" v-for="persona in personasFiltradas">
+            <div class="col" v-for="persona in personasFiltradas" >
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
@@ -27,7 +45,16 @@
                         <a href="#" class="card-link">{{persona.correo}}</a>
                     </div>
                 </div>
-            </div>
+            </div> 
+            <!-- <div class="col" v-for="persona in personasFiltradas2" >
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{getNombreCompleto(persona)}}</h5>
+                        <p class="card-text">dni {{persona.dni}}</p>
+                        <a href="#" class="card-link">{{persona.correo}}</a>
+                    </div>
+                </div>
+            </div> -->          
         </div>
     </div>
 
@@ -40,6 +67,7 @@
         el: '#app',
         data: {
             criterioDeBusqueda: '',
+            criterioDeBusqueda2: '',
             //Aquí, en este array es donde tienen que agregar su información
             personas: [
                 {
@@ -49,21 +77,71 @@
                     dni: "20442873"
                 },
                 {
-                    nombre: "...",
-                    apellido: "...",
-                    correo: "...",
-                    dni: "..."
+                    nombre: "Juan",
+                    apellido: "Perez",
+                    correo: "Juan@gmail.com",
+                    dni: "39625699"
+                },
+                {
+                    nombre: "Hernan",
+                    apellido: "Lopez",
+                    correo: "Hernan@gmail.com",
+                    dni: "36926555"
+                },
+                {
+                    nombre: "Christian",
+                    apellido: "Vargas",
+                    correo: "Christian@gmail.com",
+                    dni: "17996655"
+                },
+                {
+                    nombre: "Daniel",
+                    apellido: "Perez",
+                    correo: "Daniel@gmail.com",
+                    dni: "203845012"
                 },
             ]
 
         },
         computed: {
             personasFiltradas() {
+             
+                
+                    
+                
+
                 return this.personas.filter((persona) => {
-                    let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} ${persona.correo}`
-                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())
-                });
-            }
+
+                    if (this.criterioDeBusqueda.length>=3||this.criterioDeBusqueda2.length>=3) {
+                        
+                    
+                    
+                    if (this.criterioDeBusqueda.length == 0 && this.criterioDeBusqueda2.length!=0) {                    
+                    let registroCompleto = `${persona.dni}`
+                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda2.toLowerCase())
+                    }
+                    if(this.criterioDeBusqueda.length != 0 && this.criterioDeBusqueda2.length==0){
+                    let registroCompleto = `${persona.nombre} ${persona.apellido}`
+                    return registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase())}
+                    if (this.criterioDeBusqueda.length != 0 && this.criterioDeBusqueda2.length!=0) {
+                        let registroCompleto = `${persona.nombre} ${persona.apellido} ${persona.dni} `                        
+                        return (registroCompleto.toLowerCase().includes(this.criterioDeBusqueda.toLowerCase()) && (registroCompleto.toLowerCase().includes(this.criterioDeBusqueda2.toLowerCase())))}
+                    else{
+                        return true;
+                    }
+                    
+                    }
+                    else{
+                        return true;
+                    }}
+
+                    
+                    
+                );
+            },
+
+           
+            
         },
         methods: {
             getNombreCompleto(persona) {
